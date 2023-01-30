@@ -1,0 +1,66 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: #ffffee;
+  font-size: 12px;
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
+canvas {
+  display: block;
+  margin: 0 auto;
+}
+
+#heart {
+  width: 500px;
+  height: 500px;
+  transform-origin: 0 0;
+}
+
+#words {
+  position: absolute;
+  left: 50%;
+  margin-left: -270px;
+  font-family: "sans-serif";
+  width: 500px;
+  transform: scale(0.6);
+  top: 130px;
+  font-size: 24px;
+  color: #666;
+}
+
+#messages {
+  opacity: 0;
+  transition: opacity 5s;
+}
+
+#elapseClock {
+  text-align: right;
+  font-size: 18px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#elapseClock .digit {
+  font-family: "digit";
+  font-size: 36px;
+}
+
+#loveu {
+  opacity: 0;
+  transition: opacity 5s ease 2s;
+  padding: 5px;
+  font-size: 22px;
+  margin-top: 30px;
+  text-align: right;
+}
+
+#loveu .signature {
+  margin-top: 10px;
+  font-size: 20px;
+  font-style: italic;
+}

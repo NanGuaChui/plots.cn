@@ -72,7 +72,7 @@ function startHeartAnimation() {
 function startWords() {
   var together = new Date();
   together.setFullYear(2022, 3, 6);
-  together.setHours(20);
+  together.setHours(0);
   together.setMinutes(0);
   together.setSeconds(0);
   together.setMilliseconds(0);

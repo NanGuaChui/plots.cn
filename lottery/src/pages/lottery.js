@@ -129,7 +129,6 @@ const initSwitchCateEvent = (prizes) => {
   const settingEl = document.querySelector("#setting");
   const ul = settingEl.querySelector("ul");
   prizes.forEach((e) => {
-    console.log(e);
     const li = document.createElement("li");
     li.innerHTML = `<button id="switch_${e.type}">${e.text}</button>`;
     ul.appendChild(li);
@@ -160,8 +159,8 @@ const initSwitchCateEvent = (prizes) => {
         currentPrizeIndex = type;
         currentPrize = basicData.prizes[currentPrizeIndex];
         basicData.luckyUsers[type] = null;
-        changePrize();
-        // resetPrize(currentPrizeIndex);
+        // changePrize();
+        resetPrize(currentPrizeIndex);
       });
     }
   });
@@ -716,7 +715,6 @@ function lottery() {
  * 保存上一次的抽奖结果
  */
 function saveData() {
-  console.log("🚀 ~ file: lottery.js:720 ~ saveData ~ currentPrize:", currentPrize)
   if (!currentPrize) {
     //若奖品抽完，则不再记录数据，但是还是可以进行抽奖
     return;

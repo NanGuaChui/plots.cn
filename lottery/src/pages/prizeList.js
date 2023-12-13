@@ -253,7 +253,6 @@ let setPrizeData = (function () {
       prizeElement.prizeLeft.textContent = "不限制";
       return;
     }
-
     count = totalCount - count;
     count = count < 0 ? 0 : count;
     let percent = (count / totalCount).toFixed(2);

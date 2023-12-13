@@ -10,4 +10,7 @@ export default defineConfig({
       src: "/src",
     },
   },
+  build: {
+    assetsInlineLimit: 4 * 1024,
+  },
 });

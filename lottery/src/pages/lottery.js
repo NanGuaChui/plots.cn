@@ -9,6 +9,7 @@ import {
 import TEMPLATE_DATA from "src/data/tempData.json";
 import USERS_DATA from "src/data/users.json";
 import initCanvas from "./canvas.js";
+import getUserAvatar from "./importAvatar.js";
 
 const ROTATE_TIME = 3000;
 const ROTATE_LOOP = 1000;
@@ -402,10 +403,9 @@ function createCard(user, isBold, id, showTable) {
   }
   //添加公司标识
   element.appendChild(createElement("company", COMPANY));
-  user[1] &&
-    element.appendChild(
-      createElement("avatar", `<img src="./userAvatar/${user[1]}"/>`)
-    );
+  element.appendChild(
+    createElement("avatar", `<img src="${getUserAvatar(user[0])}"/>`)
+  );
   element.appendChild(createElement("name", user[0]));
   return element;
 }
@@ -763,7 +763,7 @@ function random(num) {
 function changeCard(cardIndex, user) {
   let card = threeDCards[cardIndex].element;
 
-  const avatarImg = (user[1] && `<img src="./userAvatar/${user[1]}"/>`) ?? "";
+  const avatarImg = `<img src="${getUserAvatar(user[0])}"/>` ?? "";
 
   card.innerHTML = `
                       <div class="company">${COMPANY}</div>
@@ -805,7 +805,7 @@ function shineCard() {
       shine(cardIndex);
       changeCard(cardIndex, basicData.leftUsers[index]);
     }
-  }, 700);
+  }, 1000);
 }
 
 function setData(type, data) {

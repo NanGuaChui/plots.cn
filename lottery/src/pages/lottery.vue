@@ -20,7 +20,7 @@
       <button id="lottery">开始抽奖</button>
       <button id="reLottery">重新抽奖</button>
       <div class="fixed-bar">
-        <button id="save" class="fixed-btn">导出抽奖结果</button>
+        <!-- <button id="save" class="fixed-btn">导出抽奖结果</button> -->
         <button id="reset" class="fixed-btn">重置</button>
       </div>
     </div>

@@ -6,8 +6,8 @@ import {
   setPrizeData,
   resetPrize,
 } from "./prizeList";
-import TEMPLATE_DATA from "../data/tempData.json";
-import USERS_DATA from "../data/users.json";
+import TEMPLATE_DATA from "src/data/tempData.json";
+import USERS_DATA from "src/data/users.json";
 import initCanvas from "./canvas.js";
 
 const ROTATE_TIME = 3000;

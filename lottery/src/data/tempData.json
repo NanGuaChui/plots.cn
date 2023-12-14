@@ -4,36 +4,36 @@
       {
         "type": 0,
         "count": 1000,
-        "title": "额外大奖",
-        "text": "额外奖",
+        "title": "加奖",
+        "text": "加奖",
         "img": "./img/secrit.jpg"
       },
       {
         "type": 1,
         "count": 1,
         "text": "一等奖",
-        "title": "3块钱",
+        "title": "意气风发",
         "img": "./img/secrit.jpg"
       },
       {
         "type": 2,
         "count": 2,
         "text": "二等奖",
-        "title": "2块钱",
+        "title": "龙飞凤五",
         "img": "./img/secrit.jpg"
       },
       {
         "type": 3,
         "count": 10,
         "text": "三等奖",
-        "title": "1块钱",
+        "title": "甜蜜百分百",
         "img": "./img/secrit.jpg"
       },
       {
         "type": 4,
         "count": 5,
         "text": "特别奖",
-        "title": "神秘大礼",
+        "title": "德勤公益小熊",
         "img": "./img/secrit.jpg"
       }
     ],

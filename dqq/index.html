@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      li {
+        margin-bottom: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="./data.js"></script>
+    <script>
+      var app = document.querySelector("#app");
+      var html = data.map(function (item) {
+        return `<li><a href="javascript:void(0)" onClick="copy('${item}')">${item}</a></li>`;
+      });
+      var ul = document.createElement("ul");
+      ul.innerHTML = html.join("");
+      app.appendChild(ul);
+
+      function copy(v) {
+        navigator.clipboard.writeText(v);
+      }
+    </script>
+  </body>
+</html>

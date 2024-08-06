@@ -24,6 +24,8 @@
 
       async function copyTextToClipboard(text) {
         try {
+          var res = text.split("：");
+          text = res[1] || res[0];
           await navigator.clipboard.writeText(text);
           console.log("Text copied to clipboard");
         } catch (err) {

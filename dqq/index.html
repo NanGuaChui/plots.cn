@@ -16,14 +16,19 @@
     <script>
       var app = document.querySelector("#app");
       var html = data.map(function (item) {
-        return `<li><a href="javascript:void(0)" onClick="copy('${item}')">${item}</a></li>`;
+        return `<li><a href="javascript:void(0)" onClick="copyTextToClipboard('${item}')">${item}</a></li>`;
       });
       var ul = document.createElement("ul");
       ul.innerHTML = html.join("");
       app.appendChild(ul);
 
-      function copy(v) {
-        navigator.clipboard.writeText(v);
+      async function copyTextToClipboard(text) {
+        try {
+          await navigator.clipboard.writeText(text);
+          console.log("Text copied to clipboard");
+        } catch (err) {
+          console.error("Failed to copy: ", err);
+        }
       }
     </script>
   </body>

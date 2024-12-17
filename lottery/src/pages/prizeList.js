@@ -5,17 +5,17 @@ let defaultType = 0;
 
 let prizes;
 const DEFAULT_MESS = [
-  "我是该抽中一等奖还是一等奖呢，纠结ing...",
-  "听说要提前一个月吃素才能中大奖喔！",
-  "好想要一等奖啊！！！",
-  "一等奖有没有人想要呢？",
-  "五等奖也不错，只要自己能中奖就行",
-  "祝大家新年快乐！",
-  "中不中奖不重要，大家吃好喝好。",
-  "新年，祝福大家事事顺遂。",
-  "作为专业陪跑的我，我就看看你们有谁跟我一样",
-  "新的一年祝福大家越来越好！",
-  "来年再战！！！",
+  '我是该抽中一等奖还是一等奖呢，纠结ing...',
+  '听说要提前一个月吃素才能中大奖喔！',
+  '好想要一等奖啊！！！',
+  '一等奖有没有人想要呢？',
+  '五等奖也不错，只要自己能中奖就行',
+  '祝大家新年快乐！',
+  '中不中奖不重要，大家吃好喝好。',
+  '新年，祝福大家事事顺遂。',
+  '作为专业陪跑的我，我就看看你们有谁跟我一样',
+  '新的一年祝福大家越来越好！',
+  '来年再战！！！',
 ];
 
 let lastDanMuList = [];
@@ -24,7 +24,7 @@ let prizeElement = {},
   lasetPrizeIndex = 0;
 class DanMu {
   constructor(option) {
-    if (typeof option !== "object") {
+    if (typeof option !== 'object') {
       option = {
         text: option,
       };
@@ -38,8 +38,8 @@ class DanMu {
   }
 
   init() {
-    this.element = document.createElement("div");
-    this.element.className = "dan-mu";
+    this.element = document.createElement('div');
+    this.element.className = 'dan-mu';
     document.body.appendChild(this.element);
 
     this.start();
@@ -59,9 +59,9 @@ class DanMu {
     let delay = speed / 10;
 
     this.setText(text);
-    this.element.style.transform = "translateX(" + this.position.x + "px)";
-    this.element.style.top = ~~(Math.random() * MAX_TOP) + 10 + "px";
-    this.element.classList.add("active");
+    this.element.style.transform = 'translateX(' + this.position.x + 'px)';
+    this.element.style.top = ~~(Math.random() * MAX_TOP) + 10 + 'px';
+    this.element.classList.add('active');
     this.tween = new TWEEN.Tween(this.position)
       .to(
         {
@@ -79,13 +79,13 @@ class DanMu {
   }
 
   render() {
-    this.element.style.transform = "translateX(" + this.position.x + "px)";
+    this.element.style.transform = 'translateX(' + this.position.x + 'px)';
   }
 }
 
 class Qipao {
   constructor(option) {
-    if (typeof option !== "object") {
+    if (typeof option !== 'object') {
       option = {
         text: option,
       };
@@ -93,10 +93,10 @@ class Qipao {
 
     this.text = option.text;
     this.onComplete = option.onComplete;
-    this.$par = document.querySelector(".qipao-container");
+    this.$par = document.querySelector('.qipao-container');
     if (!this.$par) {
-      this.$par = document.createElement("div");
-      this.$par.className = "qipao-container";
+      this.$par = document.createElement('div');
+      this.$par.className = 'qipao-container';
       document.body.appendChild(this.$par);
     }
 
@@ -104,8 +104,8 @@ class Qipao {
   }
 
   init() {
-    this.element = document.createElement("div");
-    this.element.className = "qipao animated";
+    this.element = document.createElement('div');
+    this.element.className = 'qipao animated';
     this.$par.appendChild(this.element);
 
     this.start();
@@ -118,12 +118,12 @@ class Qipao {
 
   start(text) {
     this.setText(text);
-    this.element.classList.remove("bounceOutRight");
-    this.element.classList.add("bounceInRight");
+    this.element.classList.remove('bounceOutRight');
+    this.element.classList.add('bounceInRight');
 
     setTimeout(() => {
-      this.element.classList.remove("bounceInRight");
-      this.element.classList.add("bounceOutRight");
+      this.element.classList.remove('bounceInRight');
+      this.element.classList.add('bounceOutRight');
       this.onComplete && this.onComplete();
     }, 10 * 1000);
   }
@@ -149,31 +149,27 @@ let addQipao = (() => {
 
 function setPrizes(pri) {
   prizes = pri;
-  defaultType = prizes[0]["type"];
+  defaultType = prizes[0]['type'];
   lasetPrizeIndex = pri.length - 1;
 }
 
 function showPrizeList(currentPrizeIndex) {
   let currentPrize = prizes[currentPrizeIndex];
   if (currentPrize.type === defaultType) {
-    currentPrize.count === "不限制";
+    currentPrize.count === '不限制';
   }
   let htmlCode = `<div class="prize-mess">正在抽取<label id="prizeType" class="prize-shine">${currentPrize.text}</label><label id="prizeText" class="prize-shine">${currentPrize.title}</label>，剩余<label id="prizeLeft" class="prize-shine">${currentPrize.count}</label>个</div><ul class="prize-list">`;
-  prizes.forEach((item) => {
+  prizes.forEach(item => {
     // if (item.type === defaultType) {
     //   return true;
     // }
-    htmlCode += `<li id="prize-item-${item.type}" class="prize-item ${
-      item.type == currentPrize.type ? "shine" : ""
-    }">
+    htmlCode += `<li id="prize-item-${item.type}" class="prize-item ${item.type == currentPrize.type ? 'shine' : ''}">
                         <span></span><span></span><span></span><span></span>
                         <div class="prize-img">
                             <img src="${item.img}" alt="${item.title}">
                         </div>
                         <div class="prize-text">
-                            <h5 class="prize-title">${item.text} ${
-      item.title
-    }</h5>
+                            <h5 class="prize-title">${item.text} ${item.title}</h5>
                             <div class="prize-count">
                                 <div class="progress">
                                     <div id="prize-bar-${
@@ -181,10 +177,8 @@ function showPrizeList(currentPrizeIndex) {
                                     }" class="progress-bar progress-bar-danger progress-bar-striped active" style="width: 100%;">
                                     </div>
                                 </div>
-                                <div id="prize-count-${
-                                  item.type
-                                }" class="prize-count-left">
-                                    ${item.count + "/" + item.count}
+                                <div id="prize-count-${item.type}" class="prize-count-left">
+                                    ${item.count + '/' + item.count}
                                 </div>
                             </div>
                         </div>
@@ -192,7 +186,7 @@ function showPrizeList(currentPrizeIndex) {
   });
   htmlCode += `</ul>`;
 
-  document.querySelector("#prizeBar").innerHTML = htmlCode;
+  document.querySelector('#prizeBar').innerHTML = htmlCode;
 }
 
 function resetPrize(currentPrizeIndex) {
@@ -218,29 +212,28 @@ let setPrizeData = (function () {
     }
 
     if (!prizeElement.prizeType) {
-      prizeElement.prizeType = document.querySelector("#prizeType");
-      prizeElement.prizeLeft = document.querySelector("#prizeLeft");
-      prizeElement.prizeText = document.querySelector("#prizeText");
+      prizeElement.prizeType = document.querySelector('#prizeType');
+      prizeElement.prizeLeft = document.querySelector('#prizeLeft');
+      prizeElement.prizeText = document.querySelector('#prizeText');
     }
 
     if (isInit) {
       for (let i = prizes.length - 1; i > currentPrizeIndex; i--) {
-        let type = prizes[i]["type"];
+        let type = prizes[i]['type'];
         // document.querySelector(`#prize-item-${type}`).className =
         //   "prize-item done";
-        document.querySelector(`#prize-item-${type}`).className = "prize-item";
-        document.querySelector(`#prize-bar-${type}`).style.width = "0";
-        document.querySelector(`#prize-count-${type}`).textContent =
-          "0" + "/" + prizes[i]["count"];
+        document.querySelector(`#prize-item-${type}`).className = 'prize-item';
+        document.querySelector(`#prize-bar-${type}`).style.width = '0';
+        document.querySelector(`#prize-count-${type}`).textContent = '0' + '/' + prizes[i]['count'];
       }
     }
 
     if (lasetPrizeIndex !== currentPrizeIndex) {
       let lastPrize = prizes[lasetPrizeIndex],
         lastBox = document.querySelector(`#prize-item-${lastPrize.type}`);
-      lastBox.classList.remove("shine");
+      lastBox.classList.remove('shine');
       // lastBox.classList.add("done");
-      elements.box && elements.box.classList.add("shine");
+      elements.box && elements.box.classList.add('shine');
       prizeElement.prizeType.textContent = currentPrize.text;
       prizeElement.prizeText.textContent = currentPrize.title;
 
@@ -248,16 +241,16 @@ let setPrizeData = (function () {
     }
 
     if (currentPrizeIndex === 0) {
-      prizeElement.prizeType.textContent = "额外奖";
-      prizeElement.prizeText.textContent = " ";
-      prizeElement.prizeLeft.textContent = "不限制";
+      prizeElement.prizeType.textContent = '额外奖';
+      prizeElement.prizeText.textContent = ' ';
+      prizeElement.prizeLeft.textContent = '不限制';
       return;
     }
     count = totalCount - count;
     count = count < 0 ? 0 : count;
     let percent = (count / totalCount).toFixed(2);
-    elements.bar && (elements.bar.style.width = percent * 100 + "%");
-    elements.text && (elements.text.textContent = count + "/" + totalCount);
+    elements.bar && (elements.bar.style.width = percent * 100 + '%');
+    elements.text && (elements.text.textContent = count + '/' + totalCount);
     prizeElement.prizeLeft.textContent = count;
   };
 })();
@@ -271,11 +264,8 @@ function startMaoPao() {
 
   function restart() {
     total = 0;
-    danmuList.forEach((item) => {
-      let text =
-        lastDanMuList.length > 0
-          ? lastDanMuList.shift()
-          : DEFAULT_MESS[index++];
+    danmuList.forEach(item => {
+      let text = lastDanMuList.length > 0 ? lastDanMuList.shift() : DEFAULT_MESS[index++];
       item.start(text);
       index = index > len ? 0 : index;
     });
@@ -303,12 +293,4 @@ function addDanMu(text) {
   lastDanMuList.push(text);
 }
 
-export {
-  startMaoPao,
-  showPrizeList,
-  setPrizeData,
-  addDanMu,
-  setPrizes,
-  resetPrize,
-  addQipao,
-};
+export { startMaoPao, showPrizeList, setPrizeData, addDanMu, setPrizes, resetPrize, addQipao };

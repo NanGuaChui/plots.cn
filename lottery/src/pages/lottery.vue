@@ -35,11 +35,11 @@
 </template>
 
 <script setup>
-import "./lottery.css";
-import initLottery from "./lottery.js";
-import music from "../assets/audio/music.mp3";
-import { onMounted, ref } from "vue";
-import settingIcon from "../assets/img/setting.png";
+import './lottery.css';
+import initLottery from './lottery.js';
+import music from '../assets/audio/music.mp3';
+import { onMounted, ref } from 'vue';
+import settingIcon from '../assets/img/setting.png';
 
 const showCategory = ref(false);
 

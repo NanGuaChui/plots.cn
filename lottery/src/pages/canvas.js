@@ -3,7 +3,7 @@ const initCanvas = () => {
   window.requestAnimFrame = (function () {
     return window.requestAnimationFrame;
   })();
-  var canvas = document.getElementById("canvas");
+  var canvas = document.getElementById('canvas');
 
   (function setSize() {
     //定义canvas的宽高，让他跟浏览器的窗口的宽高相同
@@ -18,10 +18,10 @@ const initCanvas = () => {
     resizeHandler(); // 立即执行一次
   })();
 
-  var c = canvas.getContext("2d");
+  var c = canvas.getContext('2d');
 
   var numStars = 800;
-  var radius = "0." + Math.floor(Math.random() * 9) + 1;
+  var radius = '0.' + Math.floor(Math.random() * 9) + 1;
   var focalLength = canvas.width * 2;
   var warp = 0;
   var centerX, centerY;
@@ -50,7 +50,7 @@ const initCanvas = () => {
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         z: Math.random() * canvas.width,
-        o: "0." + Math.floor(Math.random() * 99) + 1,
+        o: '0.' + Math.floor(Math.random() * 99) + 1,
       };
       stars.push(star);
     }
@@ -71,19 +71,16 @@ const initCanvas = () => {
     var pixelX, pixelY, pixelRadius;
 
     // Resize to the screen
-    if (
-      canvas.width != window.innerWidth ||
-      canvas.width != window.innerWidth
-    ) {
+    if (canvas.width != window.innerWidth || canvas.width != window.innerWidth) {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       initializeStars();
     }
     if (warp == 0) {
-      c.fillStyle = "rgba(0,10,20,1)";
+      c.fillStyle = 'rgba(0,10,20,1)';
       c.fillRect(0, 0, canvas.width, canvas.height);
     }
-    c.fillStyle = "rgba(209, 255, 255, " + radius + ")";
+    c.fillStyle = 'rgba(209, 255, 255, ' + radius + ')';
     for (i = 0; i < numStars; i++) {
       star = stars[i];
 
@@ -94,7 +91,7 @@ const initCanvas = () => {
       pixelRadius = 1 * (focalLength / star.z);
 
       c.fillRect(pixelX, pixelY, pixelRadius, pixelRadius);
-      c.fillStyle = "rgba(209, 255, 255, " + star.o + ")";
+      c.fillStyle = 'rgba(209, 255, 255, ' + star.o + ')';
       //c.fill();
     }
   }

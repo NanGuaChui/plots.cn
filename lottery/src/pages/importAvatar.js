@@ -6,11 +6,14 @@ const avatarList = {
 };
 const modules = { ...jpgModules, ...pngModules };
 for (const path in modules) {
-  const item = modules[path];
-  const userName = path.split('/').pop().split('.')[0];
+  const userName = path.split('/').pop().split('.')[0].toLowerCase();
   avatarList[userName] = modules[path].default;
 }
 
 export default userName => {
+  userName = userName.replace(/[\s,]/g, '').toLowerCase();
+  if (!avatarList[userName]) {
+    console.log(userName);
+  }
   return avatarList[userName] || avatarList['default'] || userName;
 };

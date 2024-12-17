@@ -13,7 +13,7 @@ for (const path in modules) {
 export default userName => {
   userName = userName.replace(/[\s,]/g, '').toLowerCase();
   if (!avatarList[userName]) {
-    console.log(userName);
+    console.log('没有头像!', userName);
   }
   return avatarList[userName] || avatarList['default'] || userName;
 };

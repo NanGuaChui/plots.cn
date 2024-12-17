@@ -87,7 +87,7 @@ const initAwards = () => {
     const luckyData = localStorage.getItem(`lucky_users`) ?? '{}';
     TEMPLATE_DATA.luckyData = JSON.parse(luckyData);
   } catch (e) {
-    console.log('🚀 ~ file: lottery.js:95 ~ initAwards ~ e:', e);
+    console.error('🚀 ~ file: lottery.js:95 ~ initAwards ~ e:', e);
   }
   basicData.luckyUsers = TEMPLATE_DATA.luckyData;
 
@@ -682,7 +682,6 @@ function lottery() {
       }
     }
 
-    // console.log(currentLuckys);
     selectCard();
   });
 }

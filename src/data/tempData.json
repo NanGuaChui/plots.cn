@@ -5,28 +5,28 @@
         "type": 0,
         "count": 1000,
         "title": "加奖",
-        "text": "",
+        "text": "加奖",
         "img": "./img/secrit.jpg"
       },
       {
         "type": 1,
         "count": 2,
         "text": "一等奖",
-        "title": "",
+        "title": "一等奖",
         "img": "./img/secrit.jpg"
       },
       {
         "type": 2,
         "count": 5,
         "text": "二等奖",
-        "title": "",
+        "title": "二等奖",
         "img": "./img/secrit.jpg"
       },
       {
         "type": 3,
         "count": 10,
         "text": "三等奖",
-        "title": "",
+        "title": "三等奖",
         "img": "./img/secrit.jpg"
       }
     ],

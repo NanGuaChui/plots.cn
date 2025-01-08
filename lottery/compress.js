@@ -4,7 +4,7 @@ import path from 'path';
 
 // 源目录和目标目录
 const sourceDir = 'C:\\Users\\sgao\\Documents\\workspace\\its avatar';
-const targetDir = 'C:\\Users\\sgao\\Develop\\plots.cn\\lottery\\src\\assets\\img\\avatar';
+const targetDir = 'C:\\Users\\sgao\\Develop\\plots.cn\\src\\assets\\img\\avatar';
 
 // 确保目标目录存在
 if (!fs.existsSync(targetDir)) {

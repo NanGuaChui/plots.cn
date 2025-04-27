@@ -1,2 +1,0 @@
-$index = 1
-Get-ChildItem *.jfif | %{Rename-Item $_ -NewName ('photo{0}.jfif' -f $index); $index++}

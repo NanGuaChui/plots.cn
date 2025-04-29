@@ -85,6 +85,9 @@ root.title("云黑课堂例子——简单计算机")
 # 设置窗口无边框和无顶部菜单栏
 root.overrideredirect(True)
 
+# 隐藏任务栏图标
+root.attributes('-toolwindow', True)
+
 # 设置窗口始终显示在最前
 root.attributes('-topmost', True)
 

@@ -1,5 +1,13 @@
 {
-    "directory": "C:/Users/sgao/Documents/hosts.txt",
-    "text_color": "#ff0000",
-    "current_page": 21
+    "fontFamily": "Courier New",
+    "fontWeight": "normal",
+    "lineHeight": "1.5",
+    "bgColor": "#00ffff",
+    "bgTransparency": "0.8",
+    "textColor": "#808040",
+    "textTransparency": "0.8",
+    "windowWidth": "800",
+    "windowHeight": "600",
+    "text_color": "#80ffff",
+    "bg_color": "#ff0000"
 }

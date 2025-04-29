@@ -9,9 +9,9 @@
     "windowWidth": "800",
     "windowHeight": "600",
     "text_color": "#400040",
-    "bg_color": "#ff8000",
-    "bg_transparency": 1.0,
-    "font_size": 10,
+    "bg_color": "#ffffff",
+    "bg_transparency": 0.67,
+    "font_size": 11,
     "max_chars": 100,
-    "current_page": 9
+    "current_page": 4
 }

@@ -29,13 +29,16 @@ draw = ImageDraw.Draw(icon_image)
 draw.rectangle((16, 16, 48, 48), fill="black")
 
 
-def create_tray_icon():
-    def show_hide_window():
-        if root.state() == "withdrawn":
-            root.deiconify()
-        else:
-            root.withdraw()
+# 添加全局的窗口显示/隐藏函数
+def show_hide_window():
+    """显示或隐藏主窗口"""
+    if root.state() == "withdrawn":
+        root.deiconify()
+    else:
+        root.withdraw()
 
+
+def create_tray_icon():
     def quit_app():
         tray_icon.stop()
         root.destroy()
@@ -77,33 +80,42 @@ def make_window_draggable(window):
     window.bind("<B1-Motion>", do_drag)
 
 
+def initialize_main_window():
+    """初始化主窗口及其属性"""
+    window = tk.Tk()
+    window.title("云黑课堂例子——简单计算机")
+
+    # 设置窗口无边框和无顶部菜单栏
+    window.overrideredirect(True)
+
+    # 隐藏任务栏图标并设置为工具窗口
+    window.attributes('-toolwindow', True)
+
+    # 设置窗口始终显示在最前
+    window.attributes('-topmost', True)
+
+    # 居中窗口
+    center_window(window)
+
+    # 启用窗口拖动功能
+    make_window_draggable(window)
+
+    return window
+
+
+def setup_tray_icon(root_window):
+    """创建并启动托盘图标"""
+    tray = create_tray_icon()
+    tray_thread = threading.Thread(target=tray.run, daemon=True)
+    tray_thread.start()
+    return tray
+
+
 # 创建主窗口
-root = tk.Tk()
-root.title("云黑课堂例子——简单计算机")
+root = initialize_main_window()
 
-
-# 设置窗口无边框和无顶部菜单栏
-root.overrideredirect(True)
-
-# 隐藏任务栏图标
-root.attributes('-toolwindow', True)
-
-# 设置窗口始终显示在最前
-root.attributes('-topmost', True)
-
-
-# 居中窗口
-center_window(root)
-
-# 启用窗口拖动功能
-make_window_draggable(root)
-
-# 创建托盘图标线程
-tray_icon = create_tray_icon()
-
-# 启动托盘图标
-tray_thread = threading.Thread(target=tray_icon.run, daemon=True)
-tray_thread.start()
+# 创建并启动托盘图标
+tray_icon = setup_tray_icon(root)
 
 
 def load_novel(file_path):

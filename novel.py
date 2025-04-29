@@ -6,6 +6,22 @@ from pystray import MenuItem as item
 from PIL import Image, ImageDraw
 import json
 from tkinter import colorchooser
+import time
+
+# 防抖装饰器
+
+
+def debounce(wait):
+    def decorator(func):
+        def wrapped(*args, **kwargs):
+            if hasattr(wrapped, "_timer"):
+                wrapped._timer.cancel()
+            wrapped._timer = threading.Timer(
+                wait, lambda: func(*args, **kwargs))
+            wrapped._timer.start()
+        return wrapped
+    return decorator
+
 
 # 创建托盘图标图像
 icon_image = Image.new("RGB", (64, 64), (255, 255, 255))
@@ -138,22 +154,45 @@ def previous_page(event=None):
         display_page(current_page)
 
 
+# 加载配置文件
+config_file = "config.json"
+try:
+    with open(config_file, "r", encoding="utf-8") as f:
+        config = json.load(f)
+except FileNotFoundError:
+    config = {}
+
+text_color = config.get("text_color", "#000000")
+bg_color = config.get("bg_color", "#FFFFFF")
+
 # 加载小说内容
 novel_file_path = "novel.txt"
 pages = load_novel(novel_file_path)
-current_page = 0
+
+# 加载当前页码
+current_page = config.get("current_page", 1) - 1  # 从配置中加载页码（从1开始）
+if current_page < 0 or current_page >= len(pages):  # 如果页码超出范围，设置为第一页
+    current_page = 0
 
 # 创建标签用于显示内容
 label = tk.Label(root, font=("Arial", 12), anchor="nw",
                  justify="left", padx=0, pady=0)
 label.pack(expand=True, fill="both")
 
-# 显示第一页内容
+
+# 应用初始配置
+bg_transparency = config.get("bg_transparency", 1.0)  # 默认透明度为1.0（不透明）
+font_size = config.get("font_size", 12)  # 默认文字大小为12
+max_chars = config.get("max_chars", 100)  # 默认每页最大字符数为100
+label.config(fg=text_color, bg=bg_color, font=("Arial", font_size))
+
+# 显示当前页内容
 display_page(current_page)
 
-# 绑定方向键事件
+# 绑定方向键事件和隐藏窗口事件
 root.bind("<Right>", next_page)
 root.bind("<Left>", previous_page)
+root.bind("<Escape>", lambda event: show_hide_window())  # 绑定 Esc 键调用显示/隐藏逻辑
 
 # 加载配置文件
 config_file = "config.json"
@@ -171,8 +210,20 @@ def save_config():
     """保存配置到config.json"""
     config["text_color"] = text_color
     config["bg_color"] = bg_color
+    config["bg_transparency"] = bg_transparency  # 保存背景透明度
+    config["font_size"] = font_size  # 保存文字大小
+    config["max_chars"] = max_chars  # 保存每页最大字符数
+    config["current_page"] = current_page + 1  # 保存当前页码（从1开始）
     with open(config_file, "w", encoding="utf-8") as f:
         json.dump(config, f, ensure_ascii=False, indent=4)
+
+
+@debounce(0.5)  # 防抖延迟0.5秒
+def update_max_chars(value):
+    global max_chars
+    if value.isdigit():
+        max_chars = int(value)
+        save_config()
 
 
 def open_settings():
@@ -180,68 +231,82 @@ def open_settings():
     def choose_text_color(event=None):
         global text_color
         color = colorchooser.askcolor(
-            title="选择文字颜色", initialcolor=text_color[:7])[1]  # 去掉透明度部分
+            title="选择文字颜色", initialcolor=text_color)[1]
         if color:
-            text_color = color + text_color[7:]  # 保留透明度部分
-            label.config(fg=color)  # 使用无透明度的颜色
+            text_color = color
+            label.config(fg=color)
             text_color_block.config(bg=color)  # 更新文字颜色色块
             save_config()
 
     def choose_bg_color(event=None):
         global bg_color
         color = colorchooser.askcolor(
-            title="选择背景颜色", initialcolor=bg_color[:7])[1]  # 去掉透明度部分
+            title="选择背景颜色", initialcolor=bg_color)[1]
         if color:
-            bg_color = color + bg_color[7:]  # 保留透明度部分
-            label.config(bg=color)  # 使用无透明度的颜色
-            root.config(bg=color)  # 使用无透明度的颜色
+            bg_color = color
+            update_background_color()
             bg_color_block.config(bg=color)  # 更新背景颜色色块
             save_config()
 
-    def set_text_opacity(value):
-        global text_color
-        r, g, b = root.winfo_rgb(text_color[:7])[:3]  # 去掉透明度部分
-        text_color = f"#{r >> 8:02x}{g >> 8:02x}{b >> 8:02x}{int(float(value) * 255):02x}"
-        label.config(fg=text_color[:7])  # 使用无透明度的颜色
+    def set_bg_transparency(value):
+        global bg_transparency
+        bg_transparency = float(value)
+        update_background_color()
         save_config()
 
-    def set_bg_opacity(value):
-        global bg_color
-        r, g, b = root.winfo_rgb(bg_color[:7])[:3]  # 去掉透明度部分
-        bg_color = f"#{r >> 8:02x}{g >> 8:02x}{b >> 8:02x}{int(float(value) * 255):02x}"
-        label.config(bg=bg_color[:7])  # 使用无透明度的颜色
-        root.config(bg=bg_color[:7])  # 使用无透明度的颜色
+    def set_font_size(value):
+        global font_size
+        font_size = int(value)
+        label.config(font=("Arial", font_size))  # 更新文字大小
         save_config()
+
+    def update_background_color():
+        """更新背景颜色和透明度"""
+        r, g, b = root.winfo_rgb(bg_color)[:3]
+        root.attributes("-alpha", bg_transparency)  # 设置窗口透明度
+        label.config(bg=f"#{r >> 8:02x}{g >> 8:02x}{b >> 8:02x}")
 
     settings_window = tk.Toplevel(root)
     settings_window.title("设置")
-    settings_window.geometry("300x200")
+    settings_window.geometry("280x250")
     settings_window.resizable(False, False)
     settings_window.attributes('-topmost', True)
 
     tk.Label(settings_window, text="文字颜色:").grid(
         row=0, column=0, padx=10, pady=5)
     text_color_block = tk.Label(
-        settings_window, bg=text_color[:7], width=10, height=1)  # 去掉透明度部分
+        settings_window, bg=text_color, width=10, height=1)
     text_color_block.grid(row=0, column=1, padx=10, pady=5)
-    text_color_block.bind("<Button-1>", choose_text_color)  # 点击色块打开颜色选择器
+    text_color_block.bind("<Button-1>", choose_text_color)
 
     tk.Label(settings_window, text="背景颜色:").grid(
         row=1, column=0, padx=10, pady=5)
     bg_color_block = tk.Label(
-        settings_window, bg=bg_color[:7], width=10, height=1)  # 去掉透明度部分
+        settings_window, bg=bg_color, width=10, height=1)
     bg_color_block.grid(row=1, column=1, padx=10, pady=5)
-    bg_color_block.bind("<Button-1>", choose_bg_color)  # 点击色块打开颜色选择器
-
-    tk.Label(settings_window, text="文字透明度:").grid(
-        row=2, column=0, padx=10, pady=5)
-    tk.Scale(settings_window, from_=0, to=1, resolution=0.01, orient="horizontal",
-             command=set_text_opacity).grid(row=2, column=1, columnspan=2, padx=10, pady=5)
+    bg_color_block.bind("<Button-1>", choose_bg_color)
 
     tk.Label(settings_window, text="背景透明度:").grid(
+        row=2, column=0, padx=10, pady=5)
+    bg_transparency_scale = tk.Scale(settings_window, from_=0.1, to=1.0, resolution=0.01, orient="horizontal",
+                                     command=set_bg_transparency)
+    bg_transparency_scale.set(bg_transparency)  # 初始化滑块值
+    bg_transparency_scale.grid(row=2, column=1, columnspan=2, padx=10, pady=5)
+
+    tk.Label(settings_window, text="文字大小:").grid(
         row=3, column=0, padx=10, pady=5)
-    tk.Scale(settings_window, from_=0, to=1, resolution=0.01, orient="horizontal",
-             command=set_bg_opacity).grid(row=3, column=1, columnspan=2, padx=10, pady=5)
+    font_size_scale = tk.Scale(settings_window, from_=8, to=20, resolution=1, orient="horizontal",
+                               command=set_font_size)
+    font_size_scale.set(font_size)  # 初始化滑块值
+    font_size_scale.grid(row=3, column=1, columnspan=2, padx=10, pady=5)
+
+    tk.Label(settings_window, text="每页最大字符数:").grid(
+        row=4, column=0, padx=10, pady=5)
+    max_chars_entry = tk.Entry(settings_window, width=10)
+    max_chars_entry.insert(0, str(max_chars))  # 初始化输入框值
+    max_chars_entry.grid(row=4, column=1, padx=10, pady=5)
+    max_chars_entry.bind(
+        "<KeyRelease>", lambda event: update_max_chars(max_chars_entry.get()))
 
 
 # 更新托盘菜单
@@ -253,10 +318,42 @@ menu = (
 tray_icon = pystray.Icon("SimpleApp", icon_image, "简单计算机", menu)
 
 
+def jump_to_page():
+    """弹出输入框以跳转到指定页面"""
+    def on_confirm():
+        nonlocal page_entry
+        value = page_entry.get()
+        if value.isdigit():
+            page_number = int(value) - 1  # 页码从1开始，索引从0开始
+            if 0 <= page_number < len(pages):
+                global current_page
+                current_page = page_number
+                display_page(current_page)
+                jump_window.destroy()
+            else:
+                page_entry.delete(0, tk.END)
+                page_entry.insert(0, f"范围: 1-{len(pages)}")
+        else:
+            page_entry.delete(0, tk.END)
+            page_entry.insert(0, "请输入数字")
+
+    jump_window = tk.Toplevel(root)
+    jump_window.title("跳转到页面")
+    jump_window.geometry("200x100")
+    jump_window.resizable(False, False)
+    jump_window.attributes('-topmost', True)
+
+    tk.Label(jump_window, text=f"输入页码 (1-{len(pages)}):").pack(pady=5)
+    page_entry = tk.Entry(jump_window, width=10)
+    page_entry.pack(pady=5)
+    tk.Button(jump_window, text="确定", command=on_confirm).pack(pady=5)
+
+
 def create_context_menu():
     """创建右键菜单"""
     context_menu = tk.Menu(root, tearoff=0)
     context_menu.add_command(label="设置", command=open_settings)
+    context_menu.add_command(label="跳转到页面", command=jump_to_page)  # 增加跳页功能
     context_menu.add_command(label="退出", command=lambda: root.destroy())
 
     def show_context_menu(event):
@@ -269,9 +366,8 @@ def create_context_menu():
 create_context_menu()
 
 
-# 应用初始配置
-label.config(fg=text_color, bg=bg_color)
 root.config(bg=bg_color)
+root.attributes("-alpha", bg_transparency)  # 设置初始透明度
 
 # 启动主循环
 root.mainloop()

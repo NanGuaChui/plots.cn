@@ -1,0 +1,22 @@
+{
+  "calendar": {
+    "instructionsTitle": "使用说明",
+    "instructions": {
+      "selectDates": "选择日期后将提示创建新事件",
+      "drag": "可以拖拽、放置并调整事件大小",
+      "clickToDelete": "点击事件可将其删除"
+    },
+    "toggleWeekends": "显示/隐藏周末",
+    "allEvents": "全部事件",
+    "event": {
+      "allDay": "全天事件",
+      "timed": "定时事件"
+    },
+    "prompt": {
+      "newTitle": "请输入事件标题"
+    },
+    "confirm": {
+      "delete": "确定要删除事件“{title}”吗？"
+    }
+  }
+}

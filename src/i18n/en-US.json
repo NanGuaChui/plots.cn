@@ -1,0 +1,22 @@
+{
+  "calendar": {
+    "instructionsTitle": "Instructions",
+    "instructions": {
+      "selectDates": "Select dates and you will be prompted to create a new event",
+      "drag": "Drag, drop, and resize events",
+      "clickToDelete": "Click an event to delete it"
+    },
+    "toggleWeekends": "Toggle weekends",
+    "allEvents": "All Events",
+    "event": {
+      "allDay": "All-day event",
+      "timed": "Timed event"
+    },
+    "prompt": {
+      "newTitle": "Please enter a new title for your event"
+    },
+    "confirm": {
+      "delete": "Are you sure you want to delete the event '{title}'?"
+    }
+  }
+}

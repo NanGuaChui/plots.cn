@@ -25,8 +25,8 @@
       exclude: ['云絮', '彩虹', '种植'],
     },
     delay: {
-      min: 500,
-      max: 1500,
+      min: 300,
+      max: 1000,
     },
     colors: {
       success: { bg: '#67C23A', border: '#5DAF34' },

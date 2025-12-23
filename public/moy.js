@@ -7,7 +7,13 @@
 // @match        **moyu-idle.com/*
 // @match        *://*moyu-idle.com/*
 // @match        *://www.moyu-idle.com/*
-// @grant        none
+// @grant        GM_addStyle
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        unsafeWindow
+// @grant        GM_xmlhttpRequest
+// @grant        GM_setClipboard
+// @run-at       document-start
 // ==/UserScript==
 
 (function () {
@@ -25,8 +31,8 @@
       exclude: ['云絮', '彩虹', '种植'],
     },
     delay: {
-      min: 300,
-      max: 1000,
+      min: 500,
+      max: 1500,
     },
     colors: {
       success: { bg: '#67C23A', border: '#5DAF34' },
@@ -37,22 +43,6 @@
   };
 
   // --- 工具函数 ---
-
-  /**
-   * 防抖函数
-   * @param {Function} fn - 需要防抖的函数
-   * @param {number} delay - 延迟时间(ms)
-   */
-  const debounce = (fn, delay) => {
-    let timer = null;
-    return function (...args) {
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(() => {
-        fn.apply(this, args);
-      }, delay);
-    };
-  };
-
   const log = (msg, ...args) => {
     console.log(`[MoyuScript] ${msg}`, ...args);
   };
@@ -61,7 +51,7 @@
   let activeObservers = [];
 
   // --- 核心逻辑 ---
-
+  // ====== 功能1：自动采集卡片 ======
   /**
    * 检查卡片是否处于“已完成/运行中”状态
    * @param {HTMLElement} card
@@ -148,8 +138,8 @@
     return observer;
   };
 
-  const executeScript = () => {
-    log('🚀 开始执行脚本...');
+  const executeAutoCollect = () => {
+    log('🚀 开始执行自动采集...');
 
     // 清理旧的 observers
     activeObservers.forEach((obs) => obs.disconnect());
@@ -176,7 +166,176 @@
     showToast(`开始处理 ${targetCards.length} 张卡片`, 'info');
   };
 
+  // ====== 功能2：快速开始任务 ======
+
+  /**
+   * 执行快速开始（点击快速开始按钮并确认）
+   */
+  const executeQuickStart = async () => {
+    log('🚀 开始执行快速开始...');
+
+    const cards = Array.from(document.querySelectorAll(CONFIG.selectors.cards));
+
+    if (!cards.length) {
+      showToast('未找到任务卡片', 'warning');
+      return;
+    }
+
+    let processedCount = 0;
+
+    for (const card of cards) {
+      try {
+        const btn = card.querySelector('.el-button.el-button--primary.el-button--small');
+
+        if (btn && btn.innerText === '快速开始') {
+          btn.click();
+          await new Promise((resolve) => setTimeout(resolve, 300));
+        }
+      } catch (error) {
+        log('❌ 快速开始出错:', error);
+      }
+    }
+
+    showToast(`快速开始完成！处理了 ${processedCount} 个任务`, 'success');
+  };
+
+  // ====== 功能3：自动使用技能书 ======
+
+  /**
+   * 使用单个技能书卡片
+   * @param {HTMLElement} card
+   */
+  const useSkillCard = async (card) => {
+    return new Promise(async (resolve) => {
+      card.click();
+      await new Promise((r) => setTimeout(r, 500));
+      const dialogEl = card.parentElement.nextElementSibling;
+      const buttons = dialogEl.querySelectorAll('.el-button.el-button--primary.el-button--small');
+      if (buttons[3]) {
+        buttons[3].click();
+        await new Promise((r) => setTimeout(r, 500));
+        const useBtn = dialogEl.querySelector('.el-button.el-button--primary.w-full');
+        if (useBtn) {
+          resolve(useBtn.click());
+        } else {
+          resolve();
+        }
+      } else {
+        resolve();
+      }
+    });
+  };
+
+  /**
+   * 执行自动使用技能书
+   */
+  const executeAutoUseSkills = async () => {
+    log('🚀 开始执行自动使用技能书...');
+
+    const skills = Array.from(document.querySelectorAll('.w-full.font-bold.text-lg')).filter((el) => {
+      return el.innerText === '技能书';
+    });
+
+    if (!skills.length) {
+      showToast('未找到技能书区域', 'warning');
+      return;
+    }
+
+    const skillSection = skills[0].nextElementSibling;
+    const skillCards = skillSection.querySelectorAll(':scope > div > .item-card');
+
+    if (!skillCards.length) {
+      showToast('未找到技能书卡片', 'warning');
+      return;
+    }
+
+    showToast(`找到 ${skillCards.length} 张技能书，开始使用...`, 'info');
+
+    for (const card of skillCards) {
+      try {
+        await useSkillCard(card);
+        await new Promise((r) => setTimeout(r, 300));
+      } catch (error) {
+        log('❌ 使用技能书出错:', error);
+      }
+    }
+
+    showToast('技能书使用完成！', 'success');
+  };
+
   // --- UI 与 工具函数 ---
+
+  /**
+   * 创建功能菜单
+   */
+  const createMenu = () => {
+    if (document.getElementById('moyu-menu')) return;
+
+    const menu = document.createElement('div');
+    menu.id = 'moyu-menu';
+    menu.style.display = 'none'; // 默认隐藏
+
+    Object.assign(menu.style, {
+      position: 'fixed',
+      bottom: '180px',
+      right: '30px',
+      backgroundColor: '#fff',
+      borderRadius: '8px',
+      boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+      zIndex: '9998',
+      overflow: 'hidden',
+      minWidth: '160px',
+    });
+
+    const menuItems = [
+      { text: '🌾 自动采集', action: executeAutoCollect },
+      { text: '⚡ 快速开始', action: executeQuickStart },
+      { text: '📚 使用技能书', action: executeAutoUseSkills },
+    ];
+
+    menuItems.forEach((item, index) => {
+      const menuItem = document.createElement('div');
+      menuItem.textContent = item.text;
+      menuItem.className = 'moyu-menu-item';
+
+      Object.assign(menuItem.style, {
+        padding: '12px 20px',
+        cursor: 'pointer',
+        fontSize: '14px',
+        color: '#333',
+        transition: 'background-color 0.2s',
+        borderBottom: index < menuItems.length - 1 ? '1px solid #eee' : 'none',
+      });
+
+      menuItem.addEventListener('mouseenter', () => {
+        menuItem.style.backgroundColor = '#f5f5f5';
+      });
+
+      menuItem.addEventListener('mouseleave', () => {
+        menuItem.style.backgroundColor = 'transparent';
+      });
+
+      menuItem.addEventListener('click', () => {
+        log(`🖱️ 点击菜单项: ${item.text}`);
+        toggleMenu(false); // 关闭菜单
+        item.action(); // 执行对应功能
+      });
+
+      menu.appendChild(menuItem);
+    });
+
+    document.body.appendChild(menu);
+    return menu;
+  };
+
+  /**
+   * 切换菜单显示/隐藏
+   * @param {boolean} show - 是否显示菜单
+   */
+  const toggleMenu = (show) => {
+    const menu = document.getElementById('moyu-menu') || createMenu();
+    menu.style.display = show ? 'block' : 'none';
+  };
 
   const showToast = (message, type = 'info') => {
     log(`📢 显示提示: ${message}`);
@@ -234,7 +393,7 @@
     const button = document.createElement('div');
     button.id = 'auto-click-floating-btn';
     button.innerHTML = '🚀';
-    button.title = '点击执行自动点击';
+    button.title = '点击打开菜单';
 
     Object.assign(button.style, {
       position: 'fixed',
@@ -266,27 +425,39 @@
       button.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
     });
 
-    // 使用防抖包装点击事件
-    button.addEventListener(
-      'click',
-      debounce(() => {
-        log('🖱️ 用户点击了悬浮按钮');
+    // 点击按钮切换菜单显示/隐藏
+    button.addEventListener('click', (e) => {
+      e.stopPropagation(); // 防止事件冒泡
+      log('🖱️ 用户点击了悬浮按钮');
 
-        // 简单的点击动画
-        button.style.transform = 'scale(0.9)';
-        setTimeout(() => (button.style.transform = 'scale(1.1)'), 150);
+      const menu = document.getElementById('moyu-menu');
+      const isMenuVisible = menu && menu.style.display === 'block';
+      toggleMenu(!isMenuVisible);
 
-        executeScript();
-      }, 300),
-    );
+      // 简单的点击动画
+      button.style.transform = 'scale(0.9)';
+      setTimeout(() => (button.style.transform = 'scale(1)'), 150);
+    });
 
     document.body.appendChild(button);
+
+    // 点击页面其他地方关闭菜单
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('moyu-menu');
+      if (menu && !menu.contains(e.target) && e.target !== button) {
+        toggleMenu(false);
+      }
+    });
   };
 
   // 初始化
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', createFloatingButton);
+    document.addEventListener('DOMContentLoaded', () => {
+      createFloatingButton();
+      createMenu();
+    });
   } else {
     createFloatingButton();
+    createMenu();
   }
 })();

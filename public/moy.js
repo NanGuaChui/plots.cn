@@ -43,8 +43,8 @@
 
     // 延迟配置 (ms)
     delay: {
-      min: 500,
-      max: 1500,
+      min: 300,
+      max: 800,
       short: 300,
       medium: 500,
       long: 1000,

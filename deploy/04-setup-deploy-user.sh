@@ -31,16 +31,26 @@ else
     print_status "用户 ${DEPLOY_USER} 创建完成"
 fi
 
-# 配置 sudo 权限
+# 配置 sudo 权限（与 .github/workflows/deploy.yml 中的命令保持一致）
 cat > /etc/sudoers.d/deploy << 'EOF'
+# systemctl 服务管理
 deploy ALL=(ALL) NOPASSWD: /bin/systemctl start plots
 deploy ALL=(ALL) NOPASSWD: /bin/systemctl stop plots
 deploy ALL=(ALL) NOPASSWD: /bin/systemctl restart plots
 deploy ALL=(ALL) NOPASSWD: /bin/systemctl status plots
-deploy ALL=(ALL) NOPASSWD: /bin/cp -r /tmp/plots-deploy/* /opt/plots/
+
+# 文件操作 - 移动部署文件
+deploy ALL=(ALL) NOPASSWD: /bin/mv /tmp/plots-deploy/plots-server /opt/plots/bin/
+deploy ALL=(ALL) NOPASSWD: /bin/mv /tmp/plots-deploy/web/* /opt/plots/web/
+
+# 文件操作 - 清理和权限
 deploy ALL=(ALL) NOPASSWD: /bin/rm -rf /opt/plots/web/*
+deploy ALL=(ALL) NOPASSWD: /bin/rm -rf /tmp/plots-deploy
+deploy ALL=(ALL) NOPASSWD: /bin/chmod +x /opt/plots/bin/plots-server
 deploy ALL=(ALL) NOPASSWD: /bin/chown -R www-data\:www-data /opt/plots
-deploy ALL=(ALL) NOPASSWD: /bin/chown -R www-data\:www-data /opt/plots/*
+
+# 备份操作
+deploy ALL=(ALL) NOPASSWD: /bin/cp /opt/plots/bin/plots-server /opt/plots/bin/plots-server.bak
 EOF
 
 chmod 440 /etc/sudoers.d/deploy

@@ -22,10 +22,10 @@
 
 ```bash
 # 方式1: 使用 scp
-scp -r deploy/* root@your-server-ip:/root/deploy/
+scp -r deploy/* root@139.155.244.16:/root/deploy/
 
 # 方式2: 使用 git clone
-ssh root@your-server-ip
+ssh root@139.155.244.16
 git clone https://github.com/yourusername/plots.git
 cd plots/deploy
 ```
@@ -34,7 +34,7 @@ cd plots/deploy
 
 ```bash
 # 登录服务器
-ssh root@your-server-ip
+ssh root@139.155.244.16
 
 # 进入脚本目录
 cd ~/deploy  # 或 cd ~/plots/deploy
@@ -58,7 +58,7 @@ sudo ./01-init-server.sh
 
 ```bash
 exit
-ssh root@your-server-ip
+ssh root@139.155.244.16
 ```
 
 验证安装：

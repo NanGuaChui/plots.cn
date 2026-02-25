@@ -156,6 +156,10 @@ sudo journalctl -u plots -f
 
 # 数据库备份
 cp /opt/plots/data/plots.db ~/plots.db.backup
+
+# 触发CI
+# 创建空提交
+git commit --allow-empty -m "触发 CI 构建"
 ```
 
 ## 📄 License

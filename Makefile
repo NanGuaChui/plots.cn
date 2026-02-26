@@ -21,14 +21,14 @@ build: backend frontend
 # 构建后端
 backend:
 	@echo ">>> 构建后端..."
-	cd backend && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o ../dist/plots-server ./cmd/server
-	@echo ">>> 后端构建完成: dist/plots-server"
+	cd backend && CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o ../dist/poetize-server ./cmd
+	@echo ">>> 后端构建完成: dist/poetize-server"
 
 # 构建后端 (Windows)
 backend-win:
 	@echo ">>> 构建后端 (Windows)..."
-	cd backend && go build -o ../dist/plots-server.exe ./cmd/server
-	@echo ">>> 后端构建完成: dist/plots-server.exe"
+	cd backend && go build -o ../dist/poetize-server.exe ./cmd
+	@echo ">>> 后端构建完成: dist/poetize-server.exe"
 
 # 构建前端
 frontend:
@@ -45,7 +45,7 @@ dev:
 # 开发模式 - 后端
 dev-backend:
 	@echo ">>> 启动后端开发服务器..."
-	cd backend && go run ./cmd/server
+	cd backend && go run ./cmd
 
 # 开发模式 - 前端
 dev-frontend:

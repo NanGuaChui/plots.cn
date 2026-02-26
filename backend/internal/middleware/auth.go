@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
-	"poetize/internal/config"
+	"plots/internal/config"
 )
 
 // Claims JWT 声明

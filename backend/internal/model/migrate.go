@@ -15,8 +15,14 @@ func InitDB(dbPath string) error {
 		return err
 	}
 
-	// 自动迁移
+	// 自动迁移 - 用户和角色
 	err = DB.AutoMigrate(&User{}, &Character{})
+	if err != nil {
+		return err
+	}
+
+	// 自动迁移 - 物品系统
+	err = DB.AutoMigrate(&ItemTag{}, &Item{}, &ItemEnhanceConfig{}, &InventoryItem{})
 	if err != nil {
 		return err
 	}

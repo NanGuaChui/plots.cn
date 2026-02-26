@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
-	"poetize/internal/model"
-	"poetize/internal/utils"
+	"plots/internal/model"
+	"plots/internal/utils"
 )
 
 // RegisterRequest 注册请求

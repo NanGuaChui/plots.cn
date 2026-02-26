@@ -3,9 +3,10 @@ package main
 import (
 	"log"
 
-	"poetize/internal/config"
-	"poetize/internal/model"
-	"poetize/internal/router"
+	"plots/internal/config"
+	"plots/internal/data"
+	"plots/internal/model"
+	"plots/internal/router"
 )
 
 func main() {
@@ -18,6 +19,11 @@ func main() {
 		log.Fatalf("数据库初始化失败: %v", err)
 	}
 	log.Println("数据库初始化完成")
+
+	// 初始化物品数据
+	if err := data.InitAllItemData(model.DB); err != nil {
+		log.Fatalf("物品数据初始化失败: %v", err)
+	}
 
 	// 配置路由
 	r := router.SetupRouter()

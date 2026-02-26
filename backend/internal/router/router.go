@@ -2,8 +2,8 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"poetize/internal/handler"
-	"poetize/internal/middleware"
+	"plots/internal/handler"
+	"plots/internal/middleware"
 )
 
 // SetupRouter 配置路由
@@ -39,6 +39,17 @@ func SetupRouter() *gin.Engine {
 			auth.POST("/login", handler.Login)
 		}
 
+		// 物品相关（无需登录，公开数据）
+		items := api.Group("/items")
+		{
+			items.GET("", handler.GetItems)
+			items.GET("/:code", handler.GetItemByCode)
+			items.GET("/tag/:tagCode", handler.GetItemsByTag)
+		}
+
+		// 物品标签（无需登录）
+		api.GET("/item-tags", handler.GetItemTags)
+
 		// 需要登录的路由
 		protected := api.Group("")
 		protected.Use(middleware.AuthMiddleware())
@@ -54,6 +65,10 @@ func SetupRouter() *gin.Engine {
 				characters.GET("/:id", handler.GetCharacter)
 				characters.DELETE("/:id", handler.DeleteCharacter)
 				characters.GET("/:id/stats", handler.GetCharacterStats)
+				
+				// 仓库相关
+				characters.GET("/:id/inventory", handler.GetInventory)
+				characters.POST("/:id/inventory/add", handler.AddInventoryItem)
 			}
 		}
 	}

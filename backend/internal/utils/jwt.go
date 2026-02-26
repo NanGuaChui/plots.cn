@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"poetize/internal/config"
-	"poetize/internal/middleware"
+	"plots/internal/config"
+	"plots/internal/middleware"
 )
 
 // GenerateToken 生成 JWT Token

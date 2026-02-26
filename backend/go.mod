@@ -1,4 +1,4 @@
-module poetize
+module plots
 
 go 1.21
 

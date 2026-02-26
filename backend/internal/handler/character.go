@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"poetize/internal/middleware"
-	"poetize/internal/model"
+	"plots/internal/middleware"
+	"plots/internal/model"
 )
 
 // CreateCharacterRequest 创建角色请求

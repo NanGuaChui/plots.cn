@@ -1,4 +1,4 @@
-# Poetize 游戏后端
+# Plots 游戏后端
 
 基于 Go + Gin + GORM + SQLite 的游戏后端服务。
 
